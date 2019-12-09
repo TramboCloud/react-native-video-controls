@@ -185,7 +185,7 @@ export default class VideoPlayer extends Component {
      */
     _onLoad( data = {} ) {
         let state = this.state;
-
+        this.seekTo(state.currentTime)
         state.duration = data.duration;
         state.loading = false;
         this.setState( state );
@@ -1291,7 +1291,7 @@ const styles = {
         },
         fill: {
             backgroundColor: '#FFF',
-            height: 1,
+            height: 2,
         },
         handle: {
             position: 'absolute',
