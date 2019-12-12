@@ -963,7 +963,7 @@ export default class VideoPlayer extends Component {
                     <SafeAreaView
                       style={[styles.controls.row, styles.controls.bottomControlGroup]}>
                       {playPauseControl}
-                      {this.renderTitle()}
+                      {this.renderResolution()}
                       {timerControl}
                     </SafeAreaView>
                 </ImageBackground>
@@ -1022,27 +1022,27 @@ export default class VideoPlayer extends Component {
     /**
      * Render our title...if supplied.
      */
-    renderTitle() {
+    renderResolution() {
+      let data = [{
+          value: '360p',
+        }, {
+          value: '480p',
+        }, {
+          value: '720p',
+        }];
 
-        if ( this.opts.title ) {
-            return (
-                <View style={[
-                    styles.controls.control,
-                    styles.controls.title,
-                ]}>
-                    <Text style={[
-                        styles.controls.text,
-                        styles.controls.titleText
-                    ]} numberOfLines={ 1 }>
-                        { this.opts.title || '' }
-                    </Text>
-                </View>
-            );
-        }
+       return (
+         <View style={{flex: 2}} >
+         <Dropdown
+           value='360p'
+           textColor="rgb(224,224,224)"
+           baseColor="rgb(224,224,224)"
+           data={data}
+         />
+         </View>
+       );
 
-        return null;
-    }
-
+     }
     /**
      * Show our timer.
      */
