@@ -1,6 +1,6 @@
 {
-  "name": "react-native-video-controls",
-  "version": "2.3.0",
+  "name": "react-native-trambo-video-controls",
+  "version": "1.0.5",
   "description": "A set of GUI controls for the react-native-video component",
   "license": "MIT",
   "main": "VideoPlayer.js",
