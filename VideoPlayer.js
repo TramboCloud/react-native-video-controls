@@ -34,7 +34,6 @@ export default class VideoPlayer extends Component {
 
     constructor( props ) {
         super( props );
-
         /**
          * All of our values that are updated by the
          * methods and listeners in this class
@@ -46,6 +45,12 @@ export default class VideoPlayer extends Component {
             muted: this.props.muted,
             volume: this.props.volume,
             rate: this.props.rate,
+            // Source variables
+            videoPrefix: this.props.videoPrefix,
+            videoResolutions: this.props.videoResolutions,
+            videoDefaultResolution: this.props.videoDefaultResolution,
+            videoExtension: this.props.videoExtension,
+            source: { uri: this.props.videoPrefix+this.props.videoDefaultResolution+this.props.videoExtension },
             // Controls
 
             isFullscreen: this.props.resizeMode === 'cover' || false,
@@ -147,6 +152,8 @@ export default class VideoPlayer extends Component {
             videoStyle: this.props.videoStyle || {},
             containerStyle: this.props.style || {}
         };
+
+
     }
 
 
@@ -170,7 +177,10 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         state.loading = true;
         this.loadAnimation();
+
         this.setState( state );
+
+
 
         if ( typeof this.props.onLoadStart === 'function' ) {
             this.props.onLoadStart(...arguments);
@@ -964,7 +974,7 @@ export default class VideoPlayer extends Component {
                     <SafeAreaView
                       style={[styles.controls.row, styles.controls.bottomControlGroup]}>
                       {playPauseControl}
-                      {this.renderResolution()}
+                      {this.renderTitle()}
                       {timerControl}
                     </SafeAreaView>
                 </ImageBackground>
@@ -987,7 +997,7 @@ export default class VideoPlayer extends Component {
                         styles.seekbar.fill,
                         {
                             width: this.state.seekerFillWidth,
-                            backgroundColor: this.props.seekColor || '#FFF'
+                            backgroundColor: this.props.seekColor || '#0000FF'
                         }
                     ]}/>
                 </View>
@@ -998,10 +1008,10 @@ export default class VideoPlayer extends Component {
                     ]}
                     { ...this.player.seekPanResponder.panHandlers }
                 >
-                    <View style={[
-                        styles.seekbar.circle,
-                        { backgroundColor: this.props.seekColor || '#FFF' } ]}
-                    />
+                  <View style={[
+                      styles.seekbar.circle,
+                      { backgroundColor: this.props.seekColor || '#FFF' } ]}
+                  />
                 </View>
             </View>
         );
@@ -1020,30 +1030,33 @@ export default class VideoPlayer extends Component {
         );
     }
 
+    inputResolution(videoResolution){
+      let state = this.state;
+      state.source.uri = state.videoPrefix+videoResolution+state.videoExtension
+      this.setState( state );
+    }
+
     /**
      * Render our title...if supplied.
      */
-    renderResolution() {
-      let data = [{
-          value: '360p',
-        }, {
-          value: '480p',
-        }, {
-          value: '720p',
-        }];
+    renderTitle() {
+      return (
+        <View style={{flex: 1 , marginLeft:155  }} >
+        <Dropdown
+          value={this.state.videoDefaultResolution}
+          textColor="rgb(224,224,224)"
+          baseColor="rgb(224,224,224)"
+          data={this.state.videoResolutions}
+          dropdownOffset={{ top: 10, left: 30 }}
+          dropdownMargins={{ min: 15, max: 10 }}
+          dropdownPosition={3}
+          onChangeText={this.inputResolution.bind(this)}
+        />
+        </View>
+      );
 
-       return (
-         <View style={{flex: 2}} >
-         <Dropdown
-           value='360p'
-           textColor="rgb(224,224,224)"
-           baseColor="rgb(224,224,224)"
-           data={data}
-         />
-         </View>
-       );
+    }
 
-     }
     /**
      * Show our timer.
      */
@@ -1122,7 +1135,7 @@ export default class VideoPlayer extends Component {
 
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
-                        source={ this.props.source }
+                        source={ this.state.source }
                     />
                     { this.renderError() }
                     { this.renderTopControls() }
@@ -1301,6 +1314,7 @@ const styles = {
             padding: 16,
         },
         icon: {
+            // height: 0,
             marginLeft:7
         }
     }),
@@ -1330,11 +1344,11 @@ const styles = {
             width: 28,
         },
         circle: {
-            borderRadius: 12,
+            borderRadius: 100,
             position: 'relative',
-            top: 8, left: 8,
-            height: 12,
-            width: 12,
+            top: 4, left: 8,
+            height: 20,
+            width: 20,
         },
     })
 };
